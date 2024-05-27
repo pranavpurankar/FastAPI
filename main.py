@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import Optional     #This for optional field see class BaseModel
 from random import randrange
 
+
 app = FastAPI()
 
 # Pydantic validation base class what kind of data send to us
