@@ -1,0 +1,5 @@
+# Ignore virtual environment file
+fast_venv
+
+# Ignore cache file __pycache__
+__pycache__
