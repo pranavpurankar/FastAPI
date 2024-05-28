@@ -14,10 +14,13 @@ class Post(BaseModel):
     published: bool=True    #optional field if user didn't provided default=True
     rating: Optional[int]=None #Totaly optional field no default value
 
-# global_variable to store posts
-# we're hard-coding post params; bcz whenever we shutdown our program it is everything
-# gets vanished that is why I am doing below things keep mind once db attach best
-# practises will be started. Right now we're keeping things at simple level
+'''
+global_variable to store posts
+we're hard-coding post params; bcz whenever we shutdown our program it is 
+everything gets vanished that is why I am doing below things keep mind once
+db attach best practises will be started. Right now we're keeping things at
+simple level
+'''
 
 my_posts = [{"title": "title of post of 1","content":"content of post 1","id":1},
 {"title": "favorite foods", "content":"I like karela","id":2}]
