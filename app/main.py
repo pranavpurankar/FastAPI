@@ -1,3 +1,8 @@
+# Section_1 Introduction
+# Section_2 Setup & Installation
+
+# Section_3 FastAPI
+
 from fastapi import FastAPI,Response,status,HTTPException
 # from fastapi.params import Body
 from pydantic import BaseModel
@@ -13,6 +18,7 @@ class Post(BaseModel):
     content: str
     published: bool=True    #optional field if user didn't provided default=True
     rating: Optional[int]=None #Totaly optional field no default value
+
 
 '''
 global_variable to store posts
@@ -30,6 +36,11 @@ def find_post(id):
         if post["id"] == id:
             return post
 
+def find_index_post(id):
+    for i, p in enumerate((my_posts)):
+        if p["id"] == id:
+            return i
+
 # Part_1: Initial setup and GET_Request
 
 @app.get("/")
@@ -44,9 +55,10 @@ def get_post():
 One thing to keep in mind that whenever we provide same path/url FastApi will
 execute the first match. It means order does matter.
 '''
+
 # ================ Covered 1 Hour/ Completed Get_reqst and path_oepration ===
 
-# Part_2: POST_request and data retrieval
+
 '''
 Imported body from fastapi.params to retrieve data
 1. Create a post request at path /createposts
@@ -98,8 +110,8 @@ def get_post(id:int,response:Response):
     return {"post_detail":post}
 
 '''
-# Instead of doing it like above we can do it little bit cleaner for above & below 
-# we have imported Response,status,HTTPException modules
+# Instead of doing it like above we can do it little bit cleaner for above & 
+# below we have imported Response,status,HTTPException modules
 
 @app.get("/posts/{id}")
 def get_post(id:int):
@@ -108,6 +120,49 @@ def get_post(id:int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
         detail=f"post with id: {id} was not found")
     return {"post_detail":post}
+
+# ================ Covered 2 Hour =============================
+# Deleting posts
+
+@app.delete("/posts/{id}",status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id:int):
+    # find the index in the array that has required ID
+    # my_post.pop(index)
+    index = find_index_post(id)
+    if index == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=
+        f"post with {id} does not exist")
+    my_posts.pop(index)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+# Updating post
+@app.put("/posts/{id}")
+def update_post(id:int, post:Post):
+    index = find_index_post(id)
+    if index == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+        detail=f"post with id: {id} does not exist")
+    post_dict = post.dict()
+    post_dict['id'] = id
+    my_posts[index] = post_dict
+    return {'data':post_dict}
+
+# CRUD operation is done! The above tutorial till 2:18 hr was to get
+# intution behind the CRUD with fast API
+
+'''
+Good feature of fastapi is automatic support for documentation it has
+built in sagger UI and redocs. Supports two doc automatic doc maker
+# http://127.0.0.1:8000/docs
+# http://127.0.0.1:8000/redoc
+'''
+
+
+
+
+
+
+
 
 # Checking whether I am in a virtual environment
 import sys # noqa: E402
